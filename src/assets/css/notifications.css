@@ -1,0 +1,54 @@
+.ant-notification {
+    max-width: 70vw;
+    width: 100%;
+    right: 0px;
+    left: 0px;
+    margin: auto;
+    z-index: 1200;
+}
+
+.ant-notification-notice-close {
+    top: 20px;
+}
+
+.ant-notification-notice-message {
+    font-size: 20px;
+    margin-bottom: 0px;
+    line-height: 1;
+    vertical-align: text-top;
+}
+
+.ant-notification-notice {
+    border-radius: 0px;
+    font-family: 'AIACondensedMedium';
+    text-transform: uppercase;
+    box-shadow: none;
+}
+
+.ant-notification-notice-close:focus {
+    outline: none;
+}
+
+.styled-notification-error .ant-notification-notice-message {
+    color: rgb(184, 18, 62);
+}
+.styled-notification-error.ant-notification-notice {
+    background: #FAE1E7;
+    border-bottom: 1px solid rgb(246, 204, 215);
+}
+
+.styled-notification-success .ant-notification-notice-message {
+    color: rgb(101, 150, 46);
+}
+.styled-notification-success.ant-notification-notice {
+    background: #E1F6CF;
+    border-bottom: 1px solid rgb(198, 235, 158);
+}
+
+.styled-notification-warn .ant-notification-notice-message {
+    color: #F9A209;
+}
+.styled-notification-warn.ant-notification-notice {
+    background: #FDDCA3;
+    border-bottom: 1px solid #F9A209;
+}

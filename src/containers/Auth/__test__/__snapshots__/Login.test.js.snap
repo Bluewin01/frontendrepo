@@ -1,0 +1,150 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Containers: Login should be render correctly 1`] = `
+<div
+  className="login"
+>
+  <h3>
+    Login to NTP 
+  </h3>
+  <form
+    className="ant-form ant-form-vertical login__form"
+    onReset={[Function]}
+    onSubmit={[Function]}
+  >
+    <div
+      className="input__form"
+    >
+      <div
+        className="ant-row ant-form-item"
+        style={
+          Object {
+            "fontSize": "20px",
+          }
+        }
+      >
+        <div
+          className="ant-col ant-form-item-label"
+          style={Object {}}
+        >
+          <label
+            className=""
+            htmlFor="userID"
+            title="User ID"
+          >
+            User ID
+          </label>
+        </div>
+        <div
+          className="ant-col ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <input
+                autoComplete="off"
+                className="ant-input"
+                data-testid="userID"
+                id="userID"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                placeholder="User ID"
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="input__form"
+    >
+      <div
+        className="ant-row ant-form-item"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-form-item-label"
+          style={Object {}}
+        >
+          <label
+            className=""
+            htmlFor="password"
+            title="Password"
+          >
+            Password
+          </label>
+        </div>
+        <div
+          className="ant-col ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <input
+                autoComplete="off"
+                className="ant-input"
+                data-testid="password"
+                id="password"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                placeholder="Password"
+                type="password"
+                value=""
+                width="100%"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="input__form"
+    >
+      <div
+        className="ant-row ant-form-item"
+        style={Object {}}
+      >
+        <div
+          className="ant-col ant-form-item-control"
+          style={Object {}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <button
+                className="ant-btn ant-btn-default ant-btn-lg ant-btn-dangerous btn__primary"
+                data-testid="loginButton"
+                disabled={false}
+                onClick={[Function]}
+                type="submit"
+              >
+                <span>
+                  Login
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  
+</div>
+`;

@@ -1,0 +1,94 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Containers: Content should be render correctly 1`] = `
+<section
+  className="content"
+>
+  <label>
+    Sample Templates
+  </label>
+  <div
+    className="templateCategory"
+  >
+    <div
+      className="card"
+      onMouseEnter={[Function]}
+      onMouseLeave={[Function]}
+    >
+      <div
+        className="cardContent"
+        style={
+          Object {
+            "display": "block",
+          }
+        }
+      >
+        My Email Template
+      </div>
+      <div
+        className="hiddenButton"
+        style={
+          Object {
+            "display": "none",
+          }
+        }
+      >
+        <div
+          className="cardButton"
+          data-testid="editTemplate"
+          onClick={[Function]}
+          style={
+            Object {
+              "height": "160px",
+            }
+          }
+        >
+          Use Template
+        </div>
+      </div>
+    </div>
+  </div>
+  <label>
+    My Templates
+  </label>
+  <div
+    className="templateCategory"
+  >
+    <div
+      className="card"
+      data-testid="createTemplate"
+      onClick={[Function]}
+    >
+      <div
+        className="cardContent"
+      >
+        <span
+          aria-label="plus"
+          className="anticon anticon-plus iconDesign"
+          role="img"
+        >
+          <svg
+            aria-hidden="true"
+            data-icon="plus"
+            fill="currentColor"
+            focusable="false"
+            height="1em"
+            viewBox="64 64 896 896"
+            width="1em"
+          >
+            <defs>
+              <style />
+            </defs>
+            <path
+              d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"
+            />
+            <path
+              d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"
+            />
+          </svg>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+`;

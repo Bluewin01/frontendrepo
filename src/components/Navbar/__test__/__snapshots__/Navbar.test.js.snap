@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: Navbar should be render correctly 1`] = `
+<nav
+  className="sc-bdVaJa beqmPi"
+>
+  <a
+    aria-current="page"
+    className="sc-bwzfXH ieUGJf active"
+    data-testid="navlogo"
+    href="/"
+    onClick={[Function]}
+    style={Object {}}
+  >
+    <img
+      alt="aia-logo-white"
+      src={Object {}}
+    />
+  </a>
+  <nav
+    className="sc-htpNat WimjQ"
+  >
+    <a
+      aria-current="page"
+      className="sc-bxivhb nGEPR active"
+      href="/"
+      onClick={[Function]}
+      style={Object {}}
+    >
+      Notification Template Portal
+    </a>
+  </nav>
+</nav>
+`;

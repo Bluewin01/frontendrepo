@@ -1,0 +1,7 @@
+.ant-select-dropdown-menu-item.styled-option.ant-select-dropdown-menu-item-active {
+    background-color: #ffffff;
+}
+
+.styled-option.ant-select-dropdown-menu-item-active > label {
+    color: rgb(34, 168, 218);
+}

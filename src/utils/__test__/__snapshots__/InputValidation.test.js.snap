@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`validate Is Input Empty Validation validate Input 1`] = `Array []`;
+
+exports[`validate Is Input Empty Validation validate input mockComponent 1`] = `Array []`;

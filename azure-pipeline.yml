@@ -1,0 +1,234 @@
+trigger:
+  branches:
+    include:
+      - master
+      - release/v*
+  tags:
+    include:
+      - release/v*
+
+pool:
+  vmImage: "ubuntu-latest"
+
+variables:
+  - name: serviceName
+    value: notification-template-portal-web-app
+  - name: dockerImageName
+    value: notification/template-portal/web-app # Add the app name only when the team namespace is not an app name itself.
+  - name: poolName
+    value: azure-sg01
+  - name: agentName
+    value: SGAZEPLAP0046
+  - name: vmImageName
+    value: ubuntu-latest
+  - name: "deploymentJobDisplayName" # The naming of stage/job/environment doesn't work for the variable groups.
+    value: "AKS Deployment" # When triggered by PR.
+  - name: "targetEnvironment" # The naming of stage/job/environment doesn't work for the variable groups.
+    value: "development" # Default value. When triggered by PR.
+  - group: az-sp
+  - group: default_feed_token
+  - ${{ if eq(variables['Build.SourceBranchName'], 'master') }}: # Development.
+      - group: common-svc-dev-03
+      - group: notification-template-portal-dev
+      - group: notification-template-portal-web-dev
+      - name: tag
+        value: latest
+      - name: "deploymentJobDisplayName" # Replace the PR value.
+        value: Release - Development
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/heads/release') }}: # UAT.
+      - group: common-svc-uat-03
+      - group: notification-template-portal-uat
+      - group: notification-template-portal-web-uat
+      - name: tag
+        value: ${{ replace(variables['Build.SourceBranch'], 'refs/heads/release/', '') }}
+      - name: "deploymentJobDisplayName" # Replace the PR value.
+        value: Release - UAT
+      - name: targetEnvironment
+        value: "uat" # Replace the default value.
+  - ${{ if startsWith(variables['Build.SourceBranch'], 'refs/tags/release') }}: # Production.
+      - group: common-svc-prod
+      - group: notification-template-portal-prod
+      - group: notification-template-portal-web-prod
+      - name: tag
+        value: ${{ replace(variables['Build.SourceBranch'], 'refs/tags/release/', '') }}
+      - name: "deploymentJobDisplayName" # Replace the PR value.
+        value: Release - Production
+      - name: targetEnvironment
+        value: "production" # Replace the default value.
+
+resources:
+  repositories:
+    - repository: pipeline
+      type: git
+      name: pipeline-template
+      ref: refs/heads/master
+      trigger: none
+
+stages:
+  - stage: Test
+    condition: or(eq(variables['Build.Reason'], 'PullRequest'), eq(variables['Build.SourceBranchName'], 'master'))
+    jobs:
+      - template: ./az-pipeline/jobs/reactjs-test.yml@pipeline
+
+  - stage: SnykScan
+    condition: and(succeeded('Test'), eq(variables['Build.SourceBranchName'], 'master'))
+    displayName: Snyk 3rd Party Library Scan
+    jobs:
+      - template: ./az-pipeline/jobs/snyk-library-scan.yml@pipeline
+        parameters:
+          snykToken: "$(snykToken)"
+          projectName: "$(serviceName)"
+          artifactStagingDirectory: "$(Build.ArtifactStagingDirectory)"
+
+  - stage: SnykSast
+    condition: and(succeeded('Test'), eq(variables['Build.SourceBranchName'], 'master'))
+    displayName: Snyk 3rd Party Sast Scan
+    jobs:
+      - template: ./az-pipeline/jobs/snyk-sast.yml@pipeline
+        parameters:
+          snykToken: "$(snykToken)"
+          projectName: "$(serviceName)"
+          artifactStagingDirectory: "$(Build.ArtifactStagingDirectory)"
+
+  - stage: CodeAnalyze
+    displayName: Code Analyze
+    dependsOn: Test
+    condition: and(succeeded('Test'), eq(variables['Build.SourceBranchName'], 'master'))
+    jobs:
+      - template: ./az-pipeline/jobs/sonarqube-scan-js.yml@pipeline
+        parameters:
+          coverageArtifactPath: "$(Build.ArtifactStagingDirectory)"
+          cliProjectKey: "$(teamNamespace)-$(serviceName)"
+          cliProjectName: "$(teamNamespace)-$(serviceName)"
+          cliProjectVersion: "$(tag)"
+
+  - stage: Build
+    displayName: Containerize Docker
+    dependsOn: Test
+    condition: and(ne(variables['Build.Reason'], 'PullRequest'), ne(dependencies.Test.result, 'Failed'))
+    jobs:
+      - job: BuildNewImage
+        displayName: Build new Image
+        variables:
+          acrTag: "$(teamNamespace)/${{ variables.dockerImageName }}:${{ variables.tag }}"
+        steps:
+          - template: ./az-pipeline/steps/az-cli-acr-build.yml@pipeline
+            parameters:
+              azPrincipalClient: "$(principalClient)"
+              azPrincipalKey: "$(principalKey)"
+              azTenantId: "$(tenantId)"
+              registry: "$(azureContainerRegistry)"
+              tag: "$(acrTag)"
+              buildArgs:
+                - "NPM_TOKEN=$(NPM_TOKEN)"
+                - "ENV=$(environment)"
+
+      - job: GenerateHelmPackage
+        displayName: Generate Helm package
+        dependsOn: BuildNewImage
+        condition: succeeded('BuildNewImage')
+        variables:
+          chartPath: "./deploy/${{ variables.serviceName }}"
+        steps:
+          - template: ./az-pipeline/steps/helm-package.yml@pipeline
+            parameters:
+              installHelm: true
+              appVersion: ${{ replace(variables['tag'], 'v', '') }}
+              destination: "$(Build.ArtifactStagingDirectory)"
+              path: "$(chartPath)"
+          - task: PublishBuildArtifacts@1
+            displayName: Publish Helm archive
+            inputs:
+              PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+              ArtifactName: "$(serviceName)"
+              publishLocation: "Container"
+
+  - stage: Security
+    dependsOn: Test
+    condition: and(succeeded('Test'), eq(variables['Build.SourceBranchName'], 'master'))
+    jobs:
+      - template: ./az-pipeline/jobs/veracode-static-scan.yml@pipeline
+        parameters:
+          sandboxName: "$(serviceName)"
+          path: "$(Build.SourcesDirectory)/src"
+          version: "$(Build.BuildNumber)"
+          excludes:
+            - '"*__test__*"'
+
+  - stage: SnykContainerScan
+    displayName: Snyk Container Scan
+    variables:
+      acrAddress: "$(teamNamespace)/${{ variables.dockerImageName }}:${{ variables.tag }}"
+      imageRepository: "$(azureContainerRegistry).azurecr.io/$(acrAddress)"
+    jobs:
+      - template: ./az-pipeline/jobs/snyk-container-scan.yml@pipeline
+        parameters:
+          snykToken: "$(snykToken)"
+          imageRepository: "$(imageRepository)"
+          projectName: "$(serviceName)"
+          artifactStagingDirectory: "$(Build.ArtifactStagingDirectory)"
+
+  - stage: Deployment
+    dependsOn:
+      - Build
+      - SnykContainerScan
+    condition: and(succeeded('Build'), or(succeeded('SnykContainerScan'), ne(variables['Build.SourceBranchName'], 'master')))
+    jobs:
+      - deployment: AKSDeployment
+        displayName: ${{ variables.deploymentJobDisplayName }}
+        condition: eq(stageDependencies.Build.GenerateHelmPackage.result, 'Succeeded')
+        pool:
+          name: "$(poolName)"
+          demands:
+            - agent.name -equals $(agentName)
+        environment: ${{ variables.targetEnvironment }}
+        variables:
+          acrAddress: "$(teamNamespace)/${{ variables.dockerImageName }}"
+          imageRepository: "$(azureContainerRegistry).azurecr.io/$(acrAddress)"
+          artifactDir: "$(System.ArtifactsDirectory)"
+          chartPath: "$(artifactDir)/$(serviceName)/$(serviceName)-*.tgz"
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - download: none
+                - template: ./az-pipeline/steps/az-cli-login-sp.yml@pipeline
+                  parameters:
+                    principalClient: "$(principalClient)"
+                    principalKey: "$(principalKey)"
+                    tenantId: "$(tenantId)"
+                - task: DownloadBuildArtifacts@0
+                  displayName: Download artifact
+                  inputs:
+                    buildType: "current"
+                    downloadType: "single"
+                    artifactName: "$(serviceName)"
+                    downloadPath: "$(artifactDir)"
+                - template: ./az-pipeline/steps/helm-upgrade.yml@pipeline
+                  parameters:
+                    installHelm: true
+                    azResourceGroup: "$(azureResourceGroup)"
+                    aksCluster: "$(k8sCluster)"
+                    name: "$(serviceName)"
+                    path: "$(chartPath)"
+                    namespace: "$(k8sNamespace)"
+                    argument: "--install --reset-values --wait"
+                    sets:
+                      - "image.repository=$(imageRepository)"
+                      - "image.tag=$(tag)"
+                      - "image.pullPolicy=$(imagePullPolicy)"
+                      - "fullnameOverride=$(serviceName)"
+                      - "service.name=$(serviceName)"
+                      - "service.port=$(port)"
+                      - "replicaCount=$(podMinReplicas)"
+                      - "autoscaling.enabled=$(podAutoscaling)"
+                      - "autoscaling.minReplicas=$(podMinReplicas)"
+                      - "autoscaling.maxReplicas=$(podMaxReplicas)"
+                      - "ingress.enabled=true"
+                      - "ingress.className=$(ingressClassName)"
+                      - "ingress.hosts[0].host=$(ingressHost)"
+                      - "ingress.hosts[0].paths[0].path=$(ingressPath)"
+                      - 'ingress.hosts[0].paths[0].pathType="$(ingressPathType)"'
+                      # - "ingress.tls[0].hosts[0]=$(ingressHost)"
+                      # - "ingress.tls[0].secretName=$(ingressSecretName)"
+                      - "envVars.APP_NAME=$(serviceName)"

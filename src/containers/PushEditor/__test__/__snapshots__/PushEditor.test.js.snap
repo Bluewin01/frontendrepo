@@ -1,0 +1,131 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Containers: Push Editor Positive Case should be render correctly 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="Toastify"
+  />
+  <form
+    className=""
+  >
+    <br />
+    <h4
+      className="text-center mb-5"
+    >
+      Push Template Editor
+    </h4>
+    <div
+      className="row"
+    >
+      <div
+        className="col mb-6 form-group"
+      >
+        <label
+          className="required form-label"
+          htmlFor="template_name"
+        >
+          Template Name
+        </label>
+        <input
+          autoComplete="off"
+          className="form-control"
+          data-testid="name"
+          id="template_name"
+          name="name"
+          onChange={[Function]}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="col mb-6 form-group"
+      >
+        <label
+          className="required form-label"
+          htmlFor="message_sub"
+        >
+          Template Title
+        </label>
+        <input
+          autoComplete="off"
+          className="form-control"
+          data-testid="subject"
+          id="message_sub"
+          name="subject"
+          onChange={[Function]}
+          type="text"
+          value=""
+        />
+        
+      </div>
+      <div
+        className="col mb-6 form-group"
+      >
+        <label
+          className="required form-label"
+          htmlFor="template_name"
+        >
+          Subtitle
+        </label>
+        <input
+          autoComplete="off"
+          className="form-control"
+          data-testid="description"
+          id="template_name"
+          name="description"
+          onChange={[Function]}
+          type="text"
+          value=""
+        />
+        
+      </div>
+    </div>
+    <div
+      className="mb-3 form-group"
+    >
+      <label
+        className="required form-label"
+        htmlFor="message"
+      >
+        Message
+      </label>
+      <textarea
+        autoComplete="off"
+        className="form-control"
+        data-testid="message"
+        id="message"
+        maxLength="30"
+        onChange={[Function]}
+        placeholder="Sample Notification"
+        rows={3}
+        value=""
+      />
+      
+    </div>
+    <div
+      className="text-right mt-3"
+    >
+      <button
+        className="Button btn btn-danger"
+        data-testid="showSaveModal"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        Save
+      </button>
+      <button
+        className="Button btn btn-light"
+        data-testid="showCancelModal"
+        disabled={false}
+        onClick={[Function]}
+        type="button"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+</div>
+`;

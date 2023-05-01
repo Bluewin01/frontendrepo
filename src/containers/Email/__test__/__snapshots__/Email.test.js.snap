@@ -1,0 +1,32 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Containers: Email Editor Positive Case should be render correctly 1`] = `
+<div
+  className="text-center"
+>
+  <div
+    className="Toastify"
+  />
+  <div
+    style={
+      Object {
+        "display": "flex",
+        "flex": 1,
+        "minHeight": 500,
+      }
+    }
+  >
+    <div
+      id="editor-1"
+      style={
+        Object {
+          "flex": 1,
+        }
+      }
+    />
+  </div>
+  <div
+    className="input__form"
+  />
+</div>
+`;

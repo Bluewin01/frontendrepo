@@ -1,0 +1,34 @@
+[
+  {
+    "id": "1",
+    "name": "My Email Template",
+    "user": "Seng",
+    "description": "This is my template description",
+    "type": "Email",
+    "subject": "This is a sample subject from seng",
+    "value": "<mjml><mj-body><mj-container><mj-section><mj-column><mj-text>Hello World!</mj-text></mj-column></mj-section></mj-container></mj-body></mjml>",
+    "rawValue": {
+      "obj": "Hello World"
+    }
+  },
+  {
+    "id": "2",
+    "name": "My Push Template",
+    "user": "Seng",
+    "description": "This is my template description",
+    "type": "Push",
+    "subject": "This is a sample subject from seng",
+    "value": {
+      "obj": "This is Push template"
+    }
+  },
+  {
+    "id": "3",
+    "name": "My Sms Template",
+    "user": "Seng",
+    "description": "This is my template description",
+    "type": "Sms",
+    "subject": "This is a sample subject from seng",
+    "value": "This is SMS Template"
+  }
+]

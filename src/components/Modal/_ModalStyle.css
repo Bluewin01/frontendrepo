@@ -1,0 +1,35 @@
+* {
+  font-size: 18px;
+}
+
+.btn {
+  text-transform: unset !important;
+}
+
+.fullScreenModal {
+  min-width: 100%;
+  min-height: 100%;
+  margin: 0px;
+}
+
+.modalHeader {
+  padding: 20px 10px 20px;
+  display: relative;
+  text-align: center;
+  font-weight: 500;
+}
+
+.modal-body {
+  padding: 20px;
+}
+
+.modal-content {
+  border-radius: 10px;
+}
+
+.Button {
+  border-radius: 10px;
+  font-size: 18px;
+  margin: 5px;
+  min-width: 70px;
+}

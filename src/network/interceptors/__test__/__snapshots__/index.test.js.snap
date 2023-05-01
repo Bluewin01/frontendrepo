@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`index.isHandlerEnabled isHandlerEnabled false 1`] = `true`;
+
+exports[`index.isHandlerEnabled isHandlerEnabled hasOwnProperty true 1`] = `false`;
+
+exports[`index.isHandlerEnabled isHandlerEnabled true 1`] = `true`;
+
+exports[`index.isHandlerEnabled isHandlerEnabled true 2`] = `true`;
+
+exports[`index.isHandlerEnabled isHandlerEnabled undefined 1`] = `true`;
+
+exports[`index.requestHandler requestHandler 1`] = `Infinity`;
+
+exports[`index.requestHandler requestHandler 200 1`] = `200`;
+
+exports[`index.requestHandler requestHandler 400 1`] = `400`;
+
+exports[`index.requestHandler requestHandler 404 1`] = `404`;
+
+exports[`index.requestHandler requestHandler 500 1`] = `500`;
+
+exports[`index.successHandler index.successHandler 1`] = `-Infinity`;
+
+exports[`index.successHandler index.successHandler 200 1`] = `200`;
+
+exports[`index.successHandler index.successHandler 400 1`] = `400`;
+
+exports[`index.successHandler index.successHandler 404 1`] = `404`;
+
+exports[`index.successHandler index.successHandler 429 1`] = `429`;
+
+exports[`index.successHandler index.successHandler 500 1`] = `500`;

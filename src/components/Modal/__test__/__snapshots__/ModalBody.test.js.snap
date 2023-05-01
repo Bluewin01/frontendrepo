@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component: Modal should be render modalBody correctly 1`] = `
+<div
+  className="modal-body"
+>
+  <form
+    className=""
+  />
+</div>
+`;

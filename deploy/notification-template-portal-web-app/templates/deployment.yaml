@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "service.fullname" . }}
+  labels:
+    {{- include "service.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        timestamp: "{{ now | date "20060102150405" }}"
+        {{- with .Values.podAnnotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "service.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "service.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          {{- if .Values.envVars }}
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.service.name }}
+          {{end}}
+          # livenessProbe:
+          #   httpGet:
+          #     path: /healthcheck
+          #     port: {{ .Values.service.port }}
+          #   initialDelaySeconds: 3
+          #   periodSeconds: 3
+          # readinessProbe:
+          #   httpGet:
+          #     path: /healthcheck
+          #     port: {{ .Values.service.port }}
+          #   initialDelaySeconds: 3
+          #   periodSeconds: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      # {{- if .Values.sslKeystore }}
+      #     volumeMounts:
+      #       - name: keystore
+      #         mountPath: "/etc/ssl/keystore"
+      #         readOnly: true
+      # volumes:
+      #   - name: keystore
+      #     secret:
+      #       secretName: {{ include "service.fullname" . }}-keystore
+      # {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

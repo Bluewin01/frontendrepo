@@ -1,0 +1,54 @@
+.card {
+  display: flex;
+  margin: 20px 10px 10px;
+  border-radius: 10px;
+  border: solid rgb(219, 219, 219) 0.5px;
+  width: 160px;
+  height: 160px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.card:hover {
+  box-shadow: 0 8px 12px 0 rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.cardContent {
+  padding: 5px;
+  margin: auto;
+  display: flex;
+  text-align: center;
+}
+
+.cardButton {
+  display: flex;
+  width: auto;
+  border-radius: 10px;
+  border-bottom: solid rgb(219, 219, 219) 0.5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.cardButton:hover {
+  background-color: #e6edeb;
+  cursor: pointer;
+}
+
+.cardButton label {
+  display: flex;
+  align-items: center;
+  margin: 0px auto 0px;
+}
+
+.hiddenButton {
+  display: none;
+}
+
+.iconDesign {
+  font-size: 150%;
+  color: rgb(180, 180, 180);
+}
+
+.icon {
+  margin-right: 5px;
+}
